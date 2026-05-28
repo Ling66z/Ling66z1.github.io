@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日打卡</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 20px; }
+    button { font-size: 20px; padding: 15px 40px; margin: 10px; }
+    ul { list-style: none; padding: 0; max-width: 300px; margin: 0 auto; }
+    li { background: #f2f2f2; margin: 5px 0; padding: 10px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>📅 打卡</h1>
+  <h2 id="count">"你已经打卡"+"点击后展示"+"次"</h2>
+  <button onclick="daka()">✅ 打卡</button>
+  <h3>历史记录</h3>
+  <ul id="history"></ul>
+
+  <script>
+    
+    
+    function loadRecords() {
+      return JSON.parse(localStorage.getItem('dakaRecords') || '[]');
+    }
+
+    function saveRecords(records) {
+      localStorage.setItem('dakaRecords', JSON.stringify(records));
+    }
+
+    function render() {
+      const records = loadRecords();
+      const list = document.getElementById('history');
+      list.innerHTML = '';
+      records.slice().reverse().forEach(r => {
+        const li = document.createElement('li');
+        li.textContent = r;
+        list.appendChild(li);
+      });
+      document.getElementById("count").innerHTML = "你已经打卡"+records.length+"次";
+    }
+
+     function daka() {        
+      const now = new Date();
+      const dateStr = now.toLocaleDateString();
+      const timeStr = now.toLocaleTimeString();
+      const record = `${dateStr} ${timeStr}`;
+      const records = loadRecords();
+      records.push(record);
+      saveRecords(records);
+      render();
+    }
+  </script>
+</body>
+</html>
